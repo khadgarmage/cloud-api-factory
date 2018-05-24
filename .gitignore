@@ -1,0 +1,8 @@
+# Dependencies
+/vendor
+
+# Composer
+composer.lock
+
+# PHPStorm
+.idea

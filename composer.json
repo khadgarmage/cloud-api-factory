@@ -1,0 +1,24 @@
+{
+    "name": "khadgarmage/cloud-api-factory",
+    "description": "PHP SDK facade for various cloud platforms",
+    "keywords": [
+        "adapter", "sdk", "php", "cloud", "api", "facade", "factory"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "liuxiaochun",
+            "email": "sugerliedear@gmail.com"
+        }
+    ],
+    "autoload": {
+      "psr-4": {
+        "KDGCA\\": "src/"
+     }
+    },
+    "require": {
+        "php": ">=5.5.0",
+        "upyun/sdk": ">=3.3.0",
+        "qcloud/cos-sdk-v5": ">=1.2.2"
+    }
+}
