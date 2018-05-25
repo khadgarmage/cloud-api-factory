@@ -11,6 +11,12 @@
             "email": "sugerliedear@gmail.com"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/khadgarmage/cloud-api-factory"
+        }
+    ],
     "autoload": {
       "psr-4": {
         "KDGCA\\": "src/"

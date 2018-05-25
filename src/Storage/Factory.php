@@ -25,7 +25,7 @@ class Factory extends Inf
                 if (empty($arrItem['type'])) {
                     throw new \Exception("type not found.");
                 }
-                $strClassName = ucfirst($arrItem['type']) . "Storage";
+                $strClassName = ucfirst($arrItem['type']) . "_Storage";
                 $obj = new $strClassName($arrItem);
                 self::$_list[$arrItem['type']] = $obj;
             }
