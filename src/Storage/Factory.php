@@ -25,7 +25,7 @@ class Factory extends Inf
                 if (empty($arrItem['type'])) {
                     throw new \Exception("type not found.");
                 }
-                $strClassName = ucfirst($arrItem['type']) . "_Storage";
+                $strClassName = "KDGCA\\Storage\\" . ucfirst($arrItem['type']) . "_Storage";
                 $obj = new $strClassName($arrItem);
                 self::$_list[$arrItem['type']] = $obj;
             }
@@ -54,7 +54,7 @@ class Factory extends Inf
     public function upLoad($strLocalPath, $strRemotePath = '/')
     {
         foreach (self::$_list as $k => $obj) {
-            $obj->upLoad($strRemotePath, $strLocalPath);
+            $obj->upLoad($strLocalPath, $strRemotePath);
         }
     }
 }

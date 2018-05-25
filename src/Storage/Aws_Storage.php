@@ -15,16 +15,22 @@ class Aws_Storage extends Inf
 {
     private $objClient = null;
     private $strBucket = "";
-    private $strKey = "";
     public function __construct($arrConfig)
     {
-        $this->objClient = new S3Client(array('version' => 'latest', 'region' => $arrConfig['region']));
+        $arrParam = array('version' => 'latest', 'region' => $arrConfig['region']);
+        if (isset($arrConfig['credentials'])) {
+            $arrParam['credentials'] = $arrConfig['credentials'];
+        }
+        $this->objClient = new S3Client($arrParam);
         $this->strBucket = $arrConfig['bucket'];
-        $this->strKey = $arrConfig['key'];
     }
 
     public function downLoad($strRemotePath, $strLocalPath = '.')
     {
+        $strRemotePath = ltrim($strRemotePath,'/');
+        if (strrchr($strLocalPath, '/') == '/') {
+            $strLocalPath .= basename($strRemotePath);
+        }
         $this->objClient->getObject(array(
             'Bucket' => $this->strBucket,
             'Key' => $strRemotePath,
@@ -37,7 +43,7 @@ class Aws_Storage extends Inf
         $strLName = basename($strLocalPath);
         $strRName = basename($strRemotePath);
         if ($strLName != $strRName) {
-            $strRemotePath = rtrim($strRemotePath,'/') . '/' . $strLName;
+            $strRemotePath = trim($strRemotePath,'/') . '/' . $strLName;
         }
         $this->objClient->putObject(array(
             'Bucket' => $this->strBucket,
