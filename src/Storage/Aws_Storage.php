@@ -41,8 +41,7 @@ class Aws_Storage extends Inf
     public function upLoad($strLocalPath, $strRemotePath = '/')
     {
         $strLName = basename($strLocalPath);
-        $strRName = basename($strRemotePath);
-        if ($strLName != $strRName) {
+        if (strrchr($strRemotePath, '/') == '/') {
             $strRemotePath = trim($strRemotePath,'/') . '/' . $strLName;
         }
         $this->objClient->putObject(array(

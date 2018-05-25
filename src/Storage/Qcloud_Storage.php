@@ -25,6 +25,10 @@ class Qcloud_Storage extends Inf
     public function downLoad($strRemotePath, $strLocalPath = '.')
     {
         try {
+            $strRemotePath = ltrim($strRemotePath,'/');
+            if (strrchr($strLocalPath, '/') == '/') {
+                $strLocalPath .= basename($strRemotePath);
+            }
             $this->objClient->getObject(array(
                 'Bucket' => $this->strBucket,
                 'Key' => $strRemotePath,
@@ -37,10 +41,15 @@ class Qcloud_Storage extends Inf
     public function upLoad($strLocalPath, $strRemotePath = '/')
     {
         try {
-            $this->objClient->putObject(array(
+            $strLName = basename($strLocalPath);
+            if (strrchr($strRemotePath, '/') == '/') {
+                $strRemotePath = trim($strRemotePath,'/') . '/' . $strLName;
+            }
+            $result = $this->objClient->putObject(array(
                 'Bucket' => $this->strBucket,
                 'Key' => $strRemotePath,
                 'Body' => fopen($strLocalPath, 'rb')));
+            print_r($result);
         } catch (\Exception $e) {
             throw $e;
         }

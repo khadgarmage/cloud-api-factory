@@ -23,12 +23,20 @@ class Upyun_Storage extends Inf
 
     public function downLoad($strRemotePath, $strLocalPath = '.')
     {
+        $strRemotePath = ltrim($strRemotePath,'/');
+        if (strrchr($strLocalPath, '/') == '/') {
+            $strLocalPath .= basename($strRemotePath);
+        }
         $strLocal = fopen($strLocalPath, 'w');
         $this->objClient->read($strRemotePath, $strLocal);
     }
 
     public function upLoad($strLocalPath, $strRemotePath = '/')
     {
+        $strLName = basename($strLocalPath);
+        if (strrchr($strRemotePath, '/') == '/') {
+            $strRemotePath = trim($strRemotePath,'/') . '/' . $strLName;
+        }
         $this->objClient->write($strRemotePath, fopen($strLocalPath, 'r'));
     }
 }
