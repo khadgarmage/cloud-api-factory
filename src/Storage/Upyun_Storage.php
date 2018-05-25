@@ -9,17 +9,26 @@
 namespace KDGCA\Storage;
 
 
+use Upyun\Config;
+use Upyun\Upyun;
+
 class Upyun_Storage extends Inf
 {
+    private $objClient = null;
     public function __construct($arrConfig)
     {
+        $arrConfig = new Config($arrConfig['bucket'], $arrConfig['user'], $arrConfig['pwd']);
+        $this->objClient = new Upyun($arrConfig);
     }
 
     public function downLoad($strRemotePath, $strLocalPath = '.')
     {
+        $strLocal = fopen($strLocalPath, 'w');
+        $this->objClient->read($strRemotePath, $strLocal);
     }
 
     public function upLoad($strLocalPath, $strRemotePath = '/')
     {
+        $this->objClient->write($strRemotePath, fopen($strLocalPath, 'r'));
     }
 }
