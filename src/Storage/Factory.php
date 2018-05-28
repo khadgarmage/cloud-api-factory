@@ -10,9 +10,13 @@ namespace KDGCA\Storage;
 
 class Factory extends Inf
 {
-    private static $_list = array();
-    private static $_instance = null;
-    private function __construct() {}
+    private static $_instances = array();
+    private $objCurr = null;
+    private function __construct($arrConfig) {
+        $strClassName = "KDGCA\\Storage\\" . ucfirst($arrConfig['type']) . "_Storage";
+        $obj = new $strClassName($arrConfig);
+        $this->objCurr = $obj;
+    }
 
     /**
      * @param array $arrConfig type为类型，其他为该类型存储需要的配置
@@ -20,18 +24,14 @@ class Factory extends Inf
      * @throws \Exception
      */
     public static function getInstance($arrConfig) {
-        if (is_null(self::$_instance)) {
-            foreach ($arrConfig as $arrItem) {
-                if (empty($arrItem['type'])) {
-                    throw new \Exception("type not found.");
-                }
-                $strClassName = "KDGCA\\Storage\\" . ucfirst($arrItem['type']) . "_Storage";
-                $obj = new $strClassName($arrItem);
-                self::$_list[$arrItem['type']] = $obj;
+        $key = md5(json_encode($arrConfig));
+        if (empty(self::$_instances[$key])) {
+            if (empty($arrConfig['type'])) {
+                throw new \Exception("type not found.");
             }
-            self::$_instance = new Factory();
+            self::$_instances[$key] = new Factory($arrConfig);
         }
-        return self::$_instance;
+        return self::$_instances[$key];
     }
 
     /**
@@ -45,14 +45,8 @@ class Factory extends Inf
         if (strrchr($strLocalPath, '/') == '/') {
             $strLocalPath .= basename($strRemotePath);
         }
-        foreach (self::$_list as $k => $obj) {
-            $ret = $obj->downLoad($strRemotePath, $strLocalPath);
-            if (!empty($ret['code'])) {
-                $ret['msg'] = $k . ' ' . $ret['msg'];
-                return $ret;
-            }
-        }
-        return array('code' => 0);
+        $ret = $this->objCurr->downLoad($strRemotePath, $strLocalPath);
+        return $ret;
     }
 
     /**
@@ -66,13 +60,7 @@ class Factory extends Inf
         if (strrchr($strRemotePath, '/') == '/') {
             $strRemotePath = trim($strRemotePath,'/') . '/' . $strLName;
         }
-        foreach (self::$_list as $k => $obj) {
-            $ret = $obj->upLoad($strLocalPath, $strRemotePath);
-            if (!empty($ret['code'])) {
-                $ret['msg'] = $k . ' ' . $ret['msg'];
-                return $ret;
-            }
-        }
-        return array('code' => 0);
+        $ret = $this->objCurr->upLoad($strLocalPath, $strRemotePath);
+        return $ret;
     }
 }
