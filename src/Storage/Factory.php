@@ -37,24 +37,42 @@ class Factory extends Inf
     /**
      * @param string $strRemotePath the file path of remote server
      * @param string $strLocalPath the file path of local machine
-     * @return bool true(download success)/ false(download fail)
+     * @return array
      */
     public function downLoad($strRemotePath, $strLocalPath = '.')
     {
+        $strRemotePath = ltrim($strRemotePath,'/');
+        if (strrchr($strLocalPath, '/') == '/') {
+            $strLocalPath .= basename($strRemotePath);
+        }
         foreach (self::$_list as $k => $obj) {
             $obj->downLoad($strRemotePath, $strLocalPath);
+            if (!empty($ret['code'])) {
+                $ret['msg'] = $k . ' ' . $ret['msg'];
+            }
+            return $ret;
         }
+        return array('code' => 0);
     }
 
     /**
      * @param string $strLocalPath the file path of local machine
      * @param string $strRemotePath the file path of remote server
-     * @return bool true(upLoad success)/ false(upLoad fail)
+     * @return array
      */
     public function upLoad($strLocalPath, $strRemotePath = '/')
     {
-        foreach (self::$_list as $k => $obj) {
-            $obj->upLoad($strLocalPath, $strRemotePath);
+        $strLName = basename($strLocalPath);
+        if (strrchr($strRemotePath, '/') == '/') {
+            $strRemotePath = trim($strRemotePath,'/') . '/' . $strLName;
         }
+        foreach (self::$_list as $k => $obj) {
+            $ret = $obj->upLoad($strLocalPath, $strRemotePath);
+            if (!empty($ret['code'])) {
+                $ret['msg'] = $k . ' ' . $ret['msg'];
+            }
+            return $ret;
+        }
+        return array('code' => 0);
     }
 }

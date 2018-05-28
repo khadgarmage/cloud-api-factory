@@ -25,33 +25,29 @@ class Qcloud_Storage extends Inf
     public function downLoad($strRemotePath, $strLocalPath = '.')
     {
         try {
-            $strRemotePath = ltrim($strRemotePath,'/');
-            if (strrchr($strLocalPath, '/') == '/') {
-                $strLocalPath .= basename($strRemotePath);
-            }
             $this->objClient->getObject(array(
                 'Bucket' => $this->strBucket,
                 'Key' => $strRemotePath,
                 'SaveAs' => $strLocalPath));
+            return array("code" => 0);
         } catch (\Exception $e) {
-            throw $e;
+            return array("code" => $e->getCode(), "msg" => $e->getMessage());
         }
     }
 
     public function upLoad($strLocalPath, $strRemotePath = '/')
     {
         try {
-            $strLName = basename($strLocalPath);
-            if (strrchr($strRemotePath, '/') == '/') {
-                $strRemotePath = trim($strRemotePath,'/') . '/' . $strLName;
+            $ret = $this->objClient->putObject(array(
+            'Bucket' => $this->strBucket,
+            'Key' => $strRemotePath,
+            'Body' => fopen($strLocalPath, 'rb')));
+            if (empty($ret['ObjectURL'])) {
+                return array("code" => 100001, "msg" => 'url is empty');
             }
-            $result = $this->objClient->putObject(array(
-                'Bucket' => $this->strBucket,
-                'Key' => $strRemotePath,
-                'Body' => fopen($strLocalPath, 'rb')));
-            print_r($result);
+            return array("code" => 0);
         } catch (\Exception $e) {
-            throw $e;
+            return array("code" => $e->getCode(), "msg" => $e->getMessage());
         }
     }
 }

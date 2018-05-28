@@ -9,6 +9,7 @@
 namespace KDGCA\Storage;
 
 
+use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 
 class Aws_Storage extends Inf
@@ -27,28 +28,33 @@ class Aws_Storage extends Inf
 
     public function downLoad($strRemotePath, $strLocalPath = '.')
     {
-        $strRemotePath = ltrim($strRemotePath,'/');
-        if (strrchr($strLocalPath, '/') == '/') {
-            $strLocalPath .= basename($strRemotePath);
+        try {
+            $this->objClient->getObject(array(
+                'Bucket' => $this->strBucket,
+                'Key' => $strRemotePath,
+                'SaveAs' => $strLocalPath
+            ));
+            return array("code" => 0);
+        } catch(S3Exception $e) {
+            return array("code" => $e->getCode(), "msg" => $e->getMessage());
         }
-        $this->objClient->getObject(array(
-            'Bucket' => $this->strBucket,
-            'Key' => $strRemotePath,
-            'SaveAs' => $strLocalPath
-        ));
     }
 
     public function upLoad($strLocalPath, $strRemotePath = '/')
     {
-        $strLName = basename($strLocalPath);
-        if (strrchr($strRemotePath, '/') == '/') {
-            $strRemotePath = trim($strRemotePath,'/') . '/' . $strLName;
+        try {
+            $ret = $this->objClient->putObject(array(
+                'Bucket' => $this->strBucket,
+                'Key' => $strRemotePath,
+                'ACL' => 'public-read',
+                'SourceFile' => $strLocalPath,
+            ));
+            if (empty($ret['ObjectURL'])) {
+                return array("code" => 100001, "msg" => 'url is empty');
+            }
+            return array("code" => 0);
+        } catch(S3Exception $e) {
+            return array("code" => $e->getCode(), "msg" => $e->getMessage());
         }
-        $this->objClient->putObject(array(
-            'Bucket' => $this->strBucket,
-            'Key'    => $strRemotePath,
-            'ACL'    => 'public-read',
-            'SourceFile' => $strLocalPath,
-        ));
     }
 }
