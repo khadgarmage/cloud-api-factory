@@ -46,11 +46,11 @@ class Factory extends Inf
             $strLocalPath .= basename($strRemotePath);
         }
         foreach (self::$_list as $k => $obj) {
-            $obj->downLoad($strRemotePath, $strLocalPath);
+            $ret = $obj->downLoad($strRemotePath, $strLocalPath);
             if (!empty($ret['code'])) {
                 $ret['msg'] = $k . ' ' . $ret['msg'];
+                return $ret;
             }
-            return $ret;
         }
         return array('code' => 0);
     }
@@ -70,8 +70,8 @@ class Factory extends Inf
             $ret = $obj->upLoad($strLocalPath, $strRemotePath);
             if (!empty($ret['code'])) {
                 $ret['msg'] = $k . ' ' . $ret['msg'];
+                return $ret;
             }
-            return $ret;
         }
         return array('code' => 0);
     }
