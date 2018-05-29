@@ -26,7 +26,7 @@ class Aws_Storage extends Inf
         $this->strBucket = $arrConfig['bucket'];
     }
 
-    public function downLoad($strRemotePath, $strLocalPath = '.')
+    public function downLoad($strRemotePath, $strLocalPath = '.', $arrOpt = array())
     {
         try {
             $this->objClient->getObject(array(
@@ -40,15 +40,17 @@ class Aws_Storage extends Inf
         }
     }
 
-    public function upLoad($strLocalPath, $strRemotePath = '/')
+    public function upLoad($strLocalPath, $strRemotePath = '/', $arrOpt = array())
     {
         try {
-            $ret = $this->objClient->putObject(array(
+            $arrDefault = array(
                 'Bucket' => $this->strBucket,
                 'Key' => $strRemotePath,
                 'ACL' => 'public-read',
                 'SourceFile' => $strLocalPath,
-            ));
+            );
+            $arrObj = array_merge($arrDefault, $arrOpt);
+            $ret = $this->objClient->putObject($arrObj);
             if (empty($ret['ObjectURL'])) {
                 return array("code" => 100001, "msg" => 'url is empty');
             }

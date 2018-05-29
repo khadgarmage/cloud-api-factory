@@ -22,7 +22,7 @@ class Qcloud_Storage extends Inf
         $this->strBucket = $arrConfig['bucket'];
     }
 
-    public function downLoad($strRemotePath, $strLocalPath = '.')
+    public function downLoad($strRemotePath, $strLocalPath = '.', $arrOpt = array())
     {
         try {
             $this->objClient->getObject(array(
@@ -35,13 +35,16 @@ class Qcloud_Storage extends Inf
         }
     }
 
-    public function upLoad($strLocalPath, $strRemotePath = '/')
+    public function upLoad($strLocalPath, $strRemotePath = '/', $arrOpt = array())
     {
         try {
-            $ret = $this->objClient->putObject(array(
-            'Bucket' => $this->strBucket,
-            'Key' => $strRemotePath,
-            'Body' => fopen($strLocalPath, 'rb')));
+            $arrDefault = array(
+                'Bucket' => $this->strBucket,
+                'Key' => $strRemotePath,
+                'Body' => fopen($strLocalPath, 'rb')
+            );
+            $arrObj = array_merge($arrDefault, $arrOpt);
+            $ret = $this->objClient->putObject($arrObj);
             if (empty($ret['ObjectURL'])) {
                 return array("code" => 100001, "msg" => 'url is empty');
             }

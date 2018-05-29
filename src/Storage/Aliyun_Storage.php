@@ -15,11 +15,11 @@ class Aliyun_Storage extends Inf
     {
     }
 
-    public function downLoad($strRemotePath, $strLocalPath = '.')
+    public function downLoad($strRemotePath, $strLocalPath = '.', $arrOpt = array())
     {
     }
 
-    public function upLoad($strLocalPath, $strRemotePath = '/')
+    public function upLoad($strLocalPath, $strRemotePath = '/', $arrOpt = array())
     {
     }
 }

@@ -21,7 +21,7 @@ class Upyun_Storage extends Inf
         $this->objClient = new Upyun($arrConfig);
     }
 
-    public function downLoad($strRemotePath, $strLocalPath = '.')
+    public function downLoad($strRemotePath, $strLocalPath = '.', $arrOpt = array())
     {
         try {
             $strLocal = fopen($strLocalPath, 'w');
@@ -32,10 +32,10 @@ class Upyun_Storage extends Inf
         }
     }
 
-    public function upLoad($strLocalPath, $strRemotePath = '/')
+    public function upLoad($strLocalPath, $strRemotePath = '/', $arrOpt = array())
     {
         try {
-            $this->objClient->write($strRemotePath, fopen($strLocalPath, 'r'));
+            $this->objClient->write($strRemotePath, fopen($strLocalPath, 'r'), $arrOpt);
             return array("code" => 0);
         } catch (\Exception $e) {
             return array("code" => $e->getCode(), "msg" => $e->getMessage());

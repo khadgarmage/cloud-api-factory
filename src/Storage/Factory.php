@@ -37,30 +37,32 @@ class Factory extends Inf
     /**
      * @param string $strRemotePath the file path of remote server
      * @param string $strLocalPath the file path of local machine
+     * @param array $arrOpt options
      * @return array
      */
-    public function downLoad($strRemotePath, $strLocalPath = '.')
+    public function downLoad($strRemotePath, $strLocalPath = '.', $arrOpt = array())
     {
         $strRemotePath = ltrim($strRemotePath,'/');
         if (strrchr($strLocalPath, '/') == '/') {
             $strLocalPath .= basename($strRemotePath);
         }
-        $ret = $this->objCurr->downLoad($strRemotePath, $strLocalPath);
+        $ret = $this->objCurr->downLoad($strRemotePath, $strLocalPath, $arrOpt);
         return $ret;
     }
 
     /**
      * @param string $strLocalPath the file path of local machine
      * @param string $strRemotePath the file path of remote server
+     * @param array $arrOpt options
      * @return array
      */
-    public function upLoad($strLocalPath, $strRemotePath = '/')
+    public function upLoad($strLocalPath, $strRemotePath = '/', $arrOpt = array())
     {
         $strLName = basename($strLocalPath);
         if (strrchr($strRemotePath, '/') == '/') {
             $strRemotePath = trim($strRemotePath,'/') . '/' . $strLName;
         }
-        $ret = $this->objCurr->upLoad($strLocalPath, $strRemotePath);
+        $ret = $this->objCurr->upLoad($strLocalPath, $strRemotePath, $arrOpt);
         return $ret;
     }
 }
