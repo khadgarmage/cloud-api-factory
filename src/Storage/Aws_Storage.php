@@ -9,7 +9,6 @@
 namespace KDGCA\Storage;
 
 
-use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 
 class Aws_Storage extends Inf
@@ -35,7 +34,7 @@ class Aws_Storage extends Inf
                 'SaveAs' => $strLocalPath
             ));
             return array("code" => 0);
-        } catch(S3Exception $e) {
+        } catch(\Exception $e) {
             return array("code" => $e->getCode(), "msg" => $e->getMessage());
         }
     }
@@ -43,6 +42,10 @@ class Aws_Storage extends Inf
     public function upLoad($strLocalPath, $strRemotePath = '/', $arrOpt = array())
     {
         try {
+            $strRemotePath = ltrim($strRemotePath, '/');
+            if (empty($strRemotePath)) {
+                $strRemotePath = './';
+            }
             $arrDefault = array(
                 'Bucket' => $this->strBucket,
                 'Key' => $strRemotePath,
@@ -55,7 +58,7 @@ class Aws_Storage extends Inf
                 return array("code" => 100001, "msg" => 'url is empty');
             }
             return array("code" => 0);
-        } catch(S3Exception $e) {
+        } catch(\Exception $e) {
             return array("code" => $e->getCode(), "msg" => $e->getMessage());
         }
     }
