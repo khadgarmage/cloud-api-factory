@@ -24,8 +24,8 @@
     },
     "require": {
         "php": ">=5.5.0",
-        "qcloud/cos-sdk-v5": ">=1.2.2",
-        "aws/aws-sdk-php": ">=3.57.0",
-        "alapi/upyun-sdk": "*"
+        "upyun/sdk": ">=3.3.0",
+        "qcloud/cos-sdk-v5": "2.*",
+        "aws/aws-sdk-php": ">=3.57.0"
     }
 }
