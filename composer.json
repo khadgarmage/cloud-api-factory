@@ -26,6 +26,6 @@
         "php": ">=5.5.0",
         "upyun/sdk": ">=3.3.0",
         "qcloud/cos-sdk-v5": "2.*",
-        "aws/aws-sdk-php": ">=3.57.0"
+        "aws/aws-sdk-php": "~3.70.0"
     }
 }
