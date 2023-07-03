@@ -45,7 +45,7 @@ class Qcloud_Storage extends Inf
             );
             $arrObj = array_merge($arrDefault, $arrOpt);
             $ret = $this->objClient->putObject($arrObj);
-            if (empty($ret['ObjectURL'])) {
+            if ( empty($ret['Location'])) {
                 return array("code" => 100001, "msg" => 'url is empty');
             }
             return array("code" => 0);
